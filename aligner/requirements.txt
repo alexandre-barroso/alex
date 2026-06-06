@@ -1,0 +1,6 @@
+gdown
+numpy
+pandas
+TextGrid
+Unidecode
+PyICU

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# Stable annotation-validator launcher for headless/backend use.
+
+set -e
+
+self_dir=$(
+  cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+  pwd -P
+)
+self="$self_dir/annotation-validator"
+utils_dir="$self_dir/../utils"
+
+case "${1:-}" in
+  --version|-v)
+    echo "Annotation Validator runtime"
+    exit 0
+    ;;
+esac
+
+if [ -f "$utils_dir/portable.sh" ] ; then
+  . "$utils_dir/portable.sh"
+  found=$(portable_find_annotation_validator "${ALEX_ANNOTATION_VALIDATOR:-}" || true)
+  if [ -n "$found" ] && [ -x "$found" ] && [ "$found" != "$self" ] ; then
+    exec "$found" "$@"
+  fi
+fi
+
+if [ -n "${ALEX_ANNOTATION_VALIDATOR:-}" ] && [ -x "$ALEX_ANNOTATION_VALIDATOR" ] && [ "$ALEX_ANNOTATION_VALIDATOR" != "$self" ] ; then
+  exec "$ALEX_ANNOTATION_VALIDATOR" "$@"
+fi
+
+for candidate in \
+  "$self_dir/../vendor/annotation_validator_runtime/annotation_validator" \
+  "$self_dir/../vendor/annotation_validator.app/Contents/MacOS/annotation_validator" \
+  "$self_dir/../vendor/annotation_validator/annotation_validator" \
+  /opt/homebrew/bin/annotation-validator \
+  /usr/local/bin/annotation-validator
+do
+  if [ -x "$candidate" ] && [ "$candidate" != "$self" ] ; then
+    exec "$candidate" "$@"
+  fi
+done
+
+found=$(PATH=$(printf "%s" "$PATH" | tr ':' '\n' | awk -v self_dir="$self_dir" '$0 != self_dir { print }' | paste -sd: -) command -v annotation-validator 2>/dev/null || true)
+if [ -n "$found" ] && [ -x "$found" ] && [ "$found" != "$self" ] ; then
+  exec "$found" "$@"
+fi
+
+echo "$0: error: annotation validator not found" >&2
+echo "$0: hint: set ALEX_ANNOTATION_VALIDATOR=/path/to/validator" >&2
+exit 1

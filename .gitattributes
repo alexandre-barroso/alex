@@ -1,0 +1,13 @@
+# GitHub rejects regular Git blobs above 100 MB. The native app/runtime bundle
+# needs LFS or a release-asset/bootstrap split before publication.
+aligner/vendor/Praat.app/** filter=lfs diff=lfs merge=lfs -text
+aligner/vendor/kaldi/src/** filter=lfs diff=lfs merge=lfs -text
+aligner/vendor/kaldi/tools/openfst/bin/** filter=lfs diff=lfs merge=lfs -text
+aligner/vendor/kaldi/tools/openfst/lib/** filter=lfs diff=lfs merge=lfs -text
+aligner/vendor/kaldi/tools/openfst-*/bin/** filter=lfs diff=lfs merge=lfs -text
+aligner/vendor/kaldi/tools/openfst-*/lib/** filter=lfs diff=lfs merge=lfs -text
+aligner/.aligner-cache/*.tar.gz filter=lfs diff=lfs merge=lfs -text
+aligner/.aligner-cache/*.gz filter=lfs diff=lfs merge=lfs -text
+aligner/.aligner-cache/*.jar filter=lfs diff=lfs merge=lfs -text
+aligner/.aligner-cache/mono/** filter=lfs diff=lfs merge=lfs -text
+*.dylib filter=lfs diff=lfs merge=lfs -text

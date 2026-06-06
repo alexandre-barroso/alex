@@ -1,0 +1,28 @@
+form aligner Pair Backend
+  sentence script_dir .
+  sentence speech_engine_root
+  sentence bp_acoustic_recipe_root
+  word speech_recipe auto
+  sentence python_bin python3
+  sentence model_cache_dir
+  word acoustic_model mono
+  sentence wav_file
+  sentence txt_file
+endform
+
+command$ = "bash " + script_dir$ + "/aligner_backend.sh --speech-engine-root " + speech_engine_root$ + " --python " + python_bin$ + " --am-tag " + acoustic_model$
+
+if bp_acoustic_recipe_root$ <> ""
+  command$ = command$ + " --bp-acoustic-recipe-root " + bp_acoustic_recipe_root$
+endif
+
+if speech_recipe$ <> ""
+  command$ = command$ + " --speech-recipe " + speech_recipe$
+endif
+
+if model_cache_dir$ <> ""
+  command$ = command$ + " --aligner-dir " + model_cache_dir$
+endif
+
+command$ = command$ + " " + wav_file$ + " " + txt_file$
+runSystem: command$

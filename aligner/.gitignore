@@ -1,0 +1,9 @@
+HTK-3.4.1.tar.gz
+*.swp
+.venv/
+.aligner-cache/
+vendor/kaldi/egs/aligner/
+*.tar.gz
+!model_cache/
+!model_cache/*.tar.gz
+*.TextGrid

@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""Convert lexicon and syllable dictionaries into m2m alignment input."""
+
+import argparse
+import logging
+import re
+import unicodedata
+from collections import OrderedDict
+
+try:
+    import icu
+except ImportError:  # Bundled apps can run without PyICU; it is only a sort helper here.
+    icu = None
+
+
+logging.basicConfig(
+    format="%(filename)s %(levelname)8s %(message)s", level=logging.INFO
+)
+
+
+def main(args):
+    lex = OrderedDict()
+    with open(args.lex_file) as f:
+        lines = [ line.strip() for line in f if line.strip() != '' ]
+    for line in lines:
+        g, _, p = line.partition('\t')
+        if g in ("!SIL", "<UNK>"):
+            continue
+        lex[g.strip()] = re.sub(r"\s+", " ", p).strip()
+
+    syll = OrderedDict()
+    with open(args.syll_file) as f:
+        lines = [ line.strip() for line in f if line.strip() != '' ]
+    for line in lines:
+        g, _, s = line.partition('\t')
+        syll[g.strip()] = re.sub(r"\s+", " ", s.replace('-', ' ')).strip()
+
+    # sanity check: dict sizes should match
+    assert len(lex) == len(syll), f"{len(lex)} {len(syll)}"
+
+    # fix bad syllabification
+    lut = OrderedDict()
+    deny_list = set()
+    for g, s in syll.items():
+        if s.replace(' ', '') != g or s.count(' ') == 0:
+            keep = True
+            deny_list.add(g)
+            if s.replace(' ', '') == g[:-1]:
+                logging.warning(f"fixing bad trimmed syll: {g=} {s=}")
+                syll[g] = s + g[-1]
+            elif s.replace(' ', '') == g[:-2]:
+                logging.warning(f"fixing bad trimmed syll: {g=} {s=}")
+                syll[g] = s + g[-2:]
+            elif len(s.replace(' ', '')) < 3:  # 3 syllables at most
+                logging.warning(f"fixing bad syll: {g=} {s=}")
+                syll[g] = g  # bypass syll and make its value same as grapheme
+            elif s.count(' ') == 0:
+                logging.warning(f"lut'ing monossyl: {g=} {s=}")
+                syll[g] = s  # monossylables
+            else:
+                logging.warning(f"discarding bad syll: {g=} {s=}")
+                keep = False
+            if keep:
+                lut[g] = syll[g]
+    for g in deny_list:
+        del syll[g]
+
+    # https://stackoverflow.com/questions/1653970/does-python-have-an-ordered-set
+    #keys = set(lex.keys()).union(set(syll.keys()))
+    keys = set(lex.keys()).intersection(set(syll.keys()))
+    if icu is not None:
+        collator = icu.Collator.createInstance(icu.Locale('pt_BR.UTF-8'))
+        sort_key = collator.getSortKey
+    else:
+        def sort_key(value: str) -> str:
+            return unicodedata.normalize("NFKD", value).casefold()
+    keys = dict.fromkeys(sorted(list(keys), key=sort_key))
+    for g in keys:
+        if g in lex.keys() and g in syll.keys():
+            p = lex[g]
+            s = syll[g]
+            if p == '' or s == '':
+                logging.error(f" ** problem in {g=}: {p=} {s=}")
+                continue
+            print(f"{p}\t{s}")
+        else:
+            # should never reach here if the intersection operator is used
+            logging.critical(f" ** missing grapheme {g}")
+
+    with open(args.m2m_lut_file, "w") as f:
+        for g, s in lut.items():
+            p = lex[g]
+            # Ambiguous syllabification falls back to the phoneme sequence so
+            # TextGrid generation can continue without inventing boundaries.
+            f.write(f"{g}\t{p}\n")
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--m2m_lut_file", type=str, required=True)
+    parser.add_argument("lex_file")
+    parser.add_argument("syll_file")
+    args = parser.parse_args()
+
+    logging.info(args)
+    main(args)

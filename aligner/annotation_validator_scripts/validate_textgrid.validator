@@ -1,0 +1,30 @@
+form Validate aligner TextGrid
+  sentence wav_file
+  sentence textgrid_file
+endform
+
+sound = Read from file: wav_file$
+selectObject: sound
+sound_xmax = Get end time
+
+textgrid = Read from file: textgrid_file$
+selectObject: textgrid
+textgrid_xmax = Get end time
+tiers = Get number of tiers
+
+if tiers < 4
+  exitScript: "TextGrid has fewer than four tiers: ", textgrid_file$
+endif
+
+if textgrid_xmax <= 0
+  exitScript: "TextGrid duration is not positive: ", textgrid_file$
+endif
+
+if textgrid_xmax > sound_xmax + 0.25
+  exitScript: "TextGrid extends beyond sound duration: ", textgrid_file$
+endif
+
+appendInfoLine: "OK", tab$, textgrid_file$, tab$, "sound=", fixed$ (sound_xmax, 3), tab$, "textgrid=", fixed$ (textgrid_xmax, 3), tab$, "tiers=", tiers
+
+selectObject: sound, textgrid
+Remove
