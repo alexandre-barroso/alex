@@ -4,8 +4,6 @@ ALEX is a standalone macOS application for TextGrid alignment and BioEar extract
 
 Version: 2.0
 
-Repository: `github.com/alexandre-barroso/alex`
-
 ## What ALEX Does
 
 ALEX has two primary workflows:
