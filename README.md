@@ -1,6 +1,6 @@
 # ALEX
 
-ALEX is a standalone macOS application for TextGrid alignment and BioEar extraction. It is designed for phonologists and phoneticians who need a local, production-oriented tool that can prepare corpus folders without requiring command-line knowledge.
+ALEX is a standalone macOS application for TextGrid **al**ignment and BioEar **ex**traction (aka, **al** + **ex** = alex). It is designed for phonologists and phoneticians who need a local, production-oriented tool that can prepare corpus folders without requiring command-line knowledge.
 
 Version: 2.0
 
