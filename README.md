@@ -158,4 +158,4 @@ Third-party project names should appear only in credits, license notices, and Ab
 
 ## License
 
-ALEX is released under the MIT License. See `LICENSE`.
+ALEX is released under the MIT License. See `LICENSE`. I would also like to thank the creators of the `brucezilany` backend module, the creators of the open source ecosystem `Kaldi` and `Kaldi-BR / Grupo FalaBrasil` backend modules and the creators of `Praat`. Additional thanks to the communities that maintain `OpenFST`, `NumPy`, `SciPy`, `h5py` and `SoundFile`. This package and repo would not be possible without relying in part on their own work -- and I thank them profusely and the open source community in general. ALEX is also open source, and you can edit, modify, implement parts of the code on your own package and use it at will.
