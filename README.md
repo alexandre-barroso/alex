@@ -13,31 +13,6 @@ ALEX has two primary workflows:
 
 Scientific outputs are written as sidecars in the same folder as the source files. ALEX does not move a corpus into a detached output directory.
 
-## macOS Application
-
-The GitHub repository contains source code and source-compatible runtime assets so users can inspect, build, and adapt ALEX. It does not commit the finished `ALEX.app` bundle.
-
-The packaged application can be built locally as:
-
-```bash
-dist/ALEX.app
-```
-
-The standalone app bundles the SwiftUI GUI, Python runtime, Python packages, Java runtime, ALEX alignment assets, ALEX-local backend code, and BioEar tools. Normal GUI use should not require `/Volumes/ConPhon/conphon`, `/Volumes/ConPhonData`, a Python virtual environment, or adjacent source folders.
-
-Build the standalone app locally with:
-
-```bash
-macos/ConPhonAligner/script/package_standalone_app.sh \
-  --python-venv /path/to/python-venv
-```
-
-For a lighter development bundle without copying a Python environment:
-
-```bash
-macos/ConPhonAligner/script/package_standalone_app.sh --no-python-venv
-```
-
 ## Input Rules
 
 ### Portuguese Alignment
@@ -54,7 +29,7 @@ Readable audio formats are accepted, including WAV, FLAC, MP3, M4A, AIFF, CAF, O
 Portuguese TextGrids are created with canonical tier names from the start:
 
 ```text
-phonemes
+phonemes/phones
 words
 syllables
 utterance
@@ -152,10 +127,8 @@ python macos/ConPhonAligner/Tools/append_bioear_aux.py \
 
 ## Packaging Notes
 
-Publishable source files must stay under GitHub's ordinary file-size limits. Generated app bundles and H5 files are not committed. Runtime assets that need expansion are kept as source-compatible archives or ignored generated caches. The finished `ALEX.app` should be distributed separately from the source repository.
-
-Third-party project names should appear only in credits, license notices, and About text. ALEX-owned code, folder names, file names, CLI flags, and operational UI text use neutral runtime names.
+See the `Releases` to download the ready-to-use app in MacOS (arm64). ALEX is part of my PhD project `ConPhon`.
 
 ## License
 
-ALEX is released under the MIT License. See `LICENSE`. I would also like to thank the creators of the `brucezilany` backend module, the creators of the open source ecosystem `Kaldi` and `Kaldi-BR / Grupo FalaBrasil` backend modules and the creators of `Praat`. Additional thanks to the communities that maintain `OpenFST`, `NumPy`, `SciPy`, `h5py` and `SoundFile`. This package and repo would not be possible without relying in part on their own work -- and I thank them profusely and the open source community in general. ALEX is also open source, and you can edit, modify, implement parts of the code on your own package and use it at will.
+ALEX is released under the MIT License. See `LICENSE`. I would also like to thank the creators of the `brucezilany` backend module, the creators of the open source ecosystem `Kaldi` and `Kaldi-BR / Grupo FalaBrasil` backend modules and the creators of `Praat`. Additional thanks to the communities that maintain `OpenFST`, `NumPy`, `SciPy`, `h5py` and `SoundFile`. This package and repo would not be possible without relying in part on their own work -- and I thank them profusely and the open source community in general, as this package would be much harder to make if it were not for their efforts combined in open science frameworks. ALEX is also open source, and you can edit, modify, implement parts of the code on your own package and use it at will.
