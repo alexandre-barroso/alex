@@ -132,3 +132,16 @@ See the `Releases` to download the ready-to-use app in MacOS (arm64). ALEX is pa
 ## License
 
 ALEX is released under the MIT License. See `LICENSE`. I would also like to thank the creators of the `brucezilany` backend module, the creators of the open source ecosystem `Kaldi` and `Kaldi-BR / Grupo FalaBrasil` backend modules and the creators of `Praat`. Additional thanks to the communities that maintain `OpenFST`, `NumPy`, `SciPy`, `h5py` and `SoundFile`. This package and repo would not be possible without relying in part on their own work -- and I thank them profusely and the open source community in general, as this package would be much harder to make if it were not for their efforts combined in open science frameworks. ALEX is also open source, and you can edit, modify, implement parts of the code on your own package and use it at will.
+
+### Reference
+
+```bibtex
+@misc{barroso2026alexalignerextractor,
+  author       = {Barroso, A. M.},
+  title        = {ALEX: Aligner and Extractor},
+  year         = {2026},
+  howpublished = {Computer program. Registration no. BR5120260042372},
+  note         = {Registered on June 16, 2026. National Institute of Industrial Property (INPI)}
+}
+```
+
